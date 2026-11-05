@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildZone — Compara · Elige · Construye</title>
+  <link rel="stylesheet" href="vendor/fuentes/fuentes.css">
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body data-pagina="inicio">
+
+<!-- Fondo de circuito para todas las páginas (queda fijo detrás del contenido):
+     textura de placa y un chip pequeño arriba a la derecha con pistas de colores.
+     Las pistas se dibujan en script.js (renderFondoCircuito); estilos en Style.css. -->
+<div class="fondo-circuito" aria-hidden="true">
+  <svg class="fondo-circuito-chip" id="fondo-circuito-chip" viewBox="0 0 440 1400" focusable="false"></svg>
+  <svg class="fondo-circuito-esquina" id="fondo-circuito-esquina" viewBox="0 0 310 72" focusable="false"></svg>
+</div>
+
+<!-- Barra superior de navegación principal -->
+<nav>
+  <a class="nav-logo" onclick="showPage('inicio')">
+    <div class="nav-logo-icon">⬡</div>
+    <div class="nav-logo-text"><span>BUILD</span><span>ZONE</span></div>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" id="nav-inicio" onclick="showPage('inicio')">Inicio</button>
+    <button class="nav-link" id="nav-productos" onclick="showPage('productos')">Productos</button>
+    <button class="nav-link" id="nav-comparador" onclick="showPage('comparador')">Comparador</button>
+    <button class="nav-link" id="nav-blog" onclick="showPage('inicio'); document.getElementById('blog-section')?.scrollIntoView({behavior:'smooth'})">Blog</button>
+    <button class="nav-link" id="nav-planes" onclick="showPage('planes'); window.cargarPlanes?.()">Planes</button>
+    <button class="nav-link" id="nav-contacto" onclick="showPage('contacto')">Contacto</button>
+    <button class="nav-link" id="nav-admin" onclick="showPage('admin'); window.cargarAdmin?.()" style="display:none">Admin</button>
+  </div>
+  <div class="nav-actions">
+    <div class="nav-icon-btn">🔍</div>
+    <div class="nav-icon-btn" id="nav-login-btn" data-login="true">👤</div>
+    <div class="nav-user-area" id="nav-user-area" style="display:none"></div>
+  </div>
+</nav>
+
+<!-- Página de inicio, activa por defecto -->
+<div class="page active" id="page-inicio">
+
+  <!-- Sección principal con el hero y la ilustración del PC -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-tag">Compara · Elige · Construye</div>
+        <h1 class="hero-title">Todo lo que tu PC necesita, <span class="accent">en un solo lugar</span></h1>
+        <p class="hero-desc">Elige una categoría, enfrenta dos productos en 4 rondas y descubre cuál te conviene.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="showPage('productos')">Explorar productos</button>
+        </div>
+      </div>
+
+      <!-- Chip: el mosaico es el procesador; por las pistas viajan pulsos de luz hacia él
+           (script.js, renderHeroChip; estilos en Style.css, .hero-chip) -->
+      <div class="hero-chip">
+        <svg class="hero-chip-svg hero-chip-glow" id="hero-chip-glow" viewBox="-1356 -281 2600 1381" aria-hidden="true" focusable="false"></svg>
+        <svg class="hero-chip-svg" id="hero-chip-circuit" viewBox="-1356 -281 2600 1381" aria-hidden="true" focusable="false"></svg>
+        <svg class="hero-chip-svg hero-chip-pulses" id="hero-chip-pulses" viewBox="-1356 -281 2600 1381" aria-hidden="true" focusable="false"></svg>
+        <div class="hero-chip-frame" aria-hidden="true"></div>
+
+        <!-- Mosaico: las 9 categorías alrededor del PC (script.js, renderHeroMosaic) -->
+        <div class="hero-mosaic">
+          <div class="hero-mosaic-cats" id="hero-mosaic-cats"></div>
+          <div class="hero-pc">
+            <svg viewBox="0 0 140 180" role="img" aria-label="Ilustración de un PC">
+              <rect x="4" y="4" width="132" height="172" rx="12" fill="#0f0f1a" stroke="#7c3aed" stroke-width="2"></rect>
+              <rect x="14" y="14" width="112" height="120" rx="6" fill="#0a0a0f" stroke="#2a1f4a" stroke-width="1.5"></rect>
+              <circle cx="104" cy="38" r="13" fill="none" stroke="#a855f7" stroke-width="1.8"></circle>
+              <circle cx="104" cy="74" r="13" fill="none" stroke="#a855f7" stroke-width="1.8"></circle>
+              <circle cx="104" cy="110" r="13" fill="none" stroke="#a855f7" stroke-width="1.8"></circle>
+              <rect x="22" y="84" width="64" height="20" rx="3" fill="#1a1a2e" stroke="#34d399" stroke-width="1.5"></rect>
+              <rect x="40" y="30" width="24" height="24" rx="3" fill="none" stroke="#a78bfa" stroke-width="1.5"></rect>
+              <rect x="70" y="26" width="5" height="34" rx="1" fill="none" stroke="#60a5fa" stroke-width="1.5"></rect>
+              <circle cx="24" cy="156" r="3" fill="#7c3aed"></circle>
+              <circle cx="34" cy="156" r="3" fill="#a855f7"></circle>
+              <circle cx="44" cy="156" r="3" fill="#c084fc"></circle>
+            </svg>
+            <div class="hero-pc-label">Arma tu PC</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hero-product-count">38</div>
+            <div class="hero-stat-label">productos para comparar</div>
+          </div>
+          <button class="hero-compare" onclick="showPage('comparador')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"></path></svg>
+            <span class="hero-compare-text">
+              <span class="hero-compare-title">Comparador</span>
+              <span class="hero-compare-sub">Enfrenta 2 productos →</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de categorías principales del catálogo -->
+  <section class="section">
+    <div class="section-label">Catálogo</div>
+    <h2 class="section-title">Categorías principales</h2>
+    <p class="section-sub">Explora por tipo de componente y encuentra exactamente lo que buscas.</p>
+    <!-- Se llena desde script.js (renderHomeCategories) con el ícono, el color y el número de productos -->
+    <div class="home-categories" id="home-categories"></div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn btn-outline" onclick="showPage('productos')">Ver todos los productos →</button>
+    </div>
+  </section>
+
+  <!-- Duelo del día: un duelo real del comparador que cambia cada día (script.js, renderHomeDuel) -->
+  <section class="section-sm">
+    <div class="home-duel" id="home-duel"></div>
+  </section>
+
+  <!-- Cómo funciona: los 3 pasos para usar BuildZone -->
+  <section class="section">
+    <div class="section-label" style="text-align:center">Cómo funciona</div>
+    <h2 class="section-title" style="text-align:center">Decide en 3 pasos</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-top">
+          <div class="how-step-icon"><svg width="30" height="30" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8h20v20H8zM36 8h20v20H36zM8 36h20v20H8zM36 36h20v20H36z"></path></svg></div>
+          <div class="how-step-num">01</div>
+        </div>
+        <h3 class="how-step-title">Elige una categoría</h3>
+        <p class="how-step-text">Procesadores, tarjetas gráficas, memorias RAM y 6 categorías más.</p>
+      </div>
+      <svg class="how-arrow" width="36" height="24" viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h30M24 4l8 8-8 8"></path></svg>
+      <div class="how-step">
+        <div class="how-step-top">
+          <div class="how-step-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"></path></svg></div>
+          <div class="how-step-num">02</div>
+        </div>
+        <h3 class="how-step-title">Enfrenta 2 productos</h3>
+        <p class="how-step-text">Compiten en 4 rondas: potencia, eficiencia, valor y popularidad.</p>
+      </div>
+      <svg class="how-arrow" width="36" height="24" viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h30M24 4l8 8-8 8"></path></svg>
+      <div class="how-step is-final">
+        <div class="how-step-top">
+          <div class="how-step-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"></path></svg></div>
+          <div class="how-step-num">03</div>
+        </div>
+        <h3 class="how-step-title">Decide con confianza</h3>
+        <p class="how-step-text">Mira quién gana y cuál te conviene según lo que buscas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Productos destacados: el más popular de algunas categorías (script.js, renderHomeFeatured) -->
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-label">Destacados</div>
+        <h2 class="section-title">Productos destacados</h2>
+      </div>
+      <button class="btn btn-outline" onclick="showPage('productos')">Ver todos →</button>
+    </div>
+    <div class="featured-grid" id="home-featured"></div>
+  </section>
+
+  <!-- Sección de noticias y contenido reciente -->
+  <section class="section" id="blog-section">
+    <div class="section-label">Blog</div>
+    <h2 class="section-title">Últimas noticias</h2>
+    <div class="news-grid" style="margin-top:2rem">
+      <div class="news-card cat-tint-cpu" data-article="cpu-guide">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 14h36v36H14zM24 24h16v16H24zM20 6v8M28 6v8M36 6v8M44 6v8M20 50v8M28 50v8M36 50v8M44 50v8M6 20h8M6 28h8M6 36h8M6 44h8M50 20h8M50 28h8M50 36h8M50 44h8"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Guías</div>
+    <div class="news-title">Cómo elegir el mejor procesador para tu PC en 2025</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+<div class="news-card cat-tint-otros" data-article="build-guide">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 4h28v56H18zM24 10h16v20H24zM36 44a4 4 0 1 1-8 0a4 4 0 1 1 8 0zM24 54h16"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Tutorial</div>
+    <div class="news-title">Guía para armar tu PC paso a paso sin errores</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+<div class="news-card cat-tint-gpu" data-article="gpu-2025">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h56v28H4zM29 30a9 9 0 1 1-18 0a9 9 0 1 1 18 0zM53 30a9 9 0 1 1-18 0a9 9 0 1 1 18 0zM22 30a2 2 0 1 1-4 0a2 2 0 1 1 4 0zM46 30a2 2 0 1 1-4 0a2 2 0 1 1 4 0zM16 44v6h24v-6"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Novedades</div>
+    <div class="news-title">Nuevas GPUs lanzadas en 2025: análisis completo</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+<div class="news-card cat-tint-ram" data-article="ram-guide">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h56v20H4zM9 25h9v10H9zM22 25h9v10h-9zM35 25h9v10h-9zM48 25h7v10h-7zM8 40v6M14 40v6M20 40v6M26 40v6M36 40v6M42 40v6M48 40v6M54 40v6"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Guías</div>
+    <div class="news-title">RAM: ¿cuánta necesitas y qué velocidad elegir?</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+<div class="news-card cat-tint-refrigeracion" data-article="cooling-guide">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h56v22H4zM21 17a7 7 0 1 1-14 0a7 7 0 1 1 14 0zM39 17a7 7 0 1 1-14 0a7 7 0 1 1 14 0zM57 17a7 7 0 1 1-14 0a7 7 0 1 1 14 0zM22 28c0 10 2 14 6 18M36 28c0 10-2 14-4 18M22 46h20v12H22z"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Tutorial</div>
+    <div class="news-title">Refrigeración líquida vs aire: cuál conviene más</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+<div class="news-card cat-tint-ambar" data-article="amd-vs-intel">
+  <div class="news-thumb"><svg width="76" height="76" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 8v46M18 56h28M10 16h44M16 16l-8 18h16zM48 16l-8 18h16zM8 34a8 5 0 0 0 16 0M40 34a8 5 0 0 0 16 0"></path></svg></div>
+  <div class="news-body">
+    <div class="news-tag">Comparativas</div>
+    <div class="news-title">AMD vs Intel en 2025: ¿quién gana en relación precio-rendimiento?</div>
+    <div class="news-link">Leer más →</div>
+  </div>
+</div>
+      </div>
+  </section>
+
+  <!-- Pie de página con enlaces secundarios -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div class="nav-logo" style="margin-bottom:1rem">
+            <div class="nav-logo-icon" style="width:28px;height:28px;font-size:12px">⬡</div>
+            <div class="nav-logo-text" style="font-size:1.1rem"><span>BUILD</span><span>ZONE</span></div>
+          </div>
+          <div class="footer-about">BuildZone te ayuda a comparar componentes de PC con datos claros, para que elijas mejor y armes tu equipo sin errores.</div>
+          <div class="footer-socials" style="margin-top:1rem">
+            <a class="social-pill" href="#" aria-label="BuildZone en Facebook">Facebook</a>
+            <a class="social-pill" href="#" aria-label="BuildZone en Instagram">Instagram</a>
+            <a class="social-pill" href="#" aria-label="BuildZone en YouTube">YouTube</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Sobre nosotros</div>
+          <div class="footer-links">
+            <div class="footer-link">Quiénes somos</div>
+            <div class="footer-link">Cómo calificamos los productos</div>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Enlaces rápidos</div>
+          <div class="footer-links">
+            <div class="footer-link" onclick="showPage('productos')">Productos</div>
+            <div class="footer-link" onclick="showPage('comparador')">Comparador</div>
+            <div class="footer-link" onclick="showPage('inicio'); document.getElementById('blog-section')?.scrollIntoView({behavior:'smooth'})">Blog</div>
+            <div class="footer-link" onclick="showPage('planes'); window.cargarPlanes?.()">Planes</div>
+            <div class="footer-link" onclick="showPage('contacto')">Contacto</div>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Ayuda</div>
+          <div class="footer-links">
+            <div class="footer-link">Preguntas frecuentes</div>
+            <div class="footer-link">Términos y condiciones</div>
+            <div class="footer-link">Política de privacidad</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 BuildZone. Todos los derechos reservados.</span>
+        <span class="footer-motto">Compara · Elige · Construye</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Página de productos -->
+<div class="page" id="page-productos">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Productos</div>
+      <h2 class="section-title">Explora componentes destacados</h2>
+      <p class="section-sub">Filtra por categoría o busca el componente que necesitas.</p>
+
+      <div class="products-toolbar">
+        <input type="text" class="products-search" id="products-search" placeholder="🔍 Buscar por nombre o marca…">
+      </div>
+
+      <div class="product-filters" id="products-categories">
+        <button class="product-filter cat-tint-all active" data-category="all" aria-pressed="true">Todos</button>
+        <button class="product-filter cat-tint-cpu" data-category="cpu" aria-pressed="false">Procesadores</button>
+        <button class="product-filter cat-tint-gpu" data-category="gpu" aria-pressed="false">Tarjetas Gráficas</button>
+        <button class="product-filter cat-tint-ram" data-category="ram" aria-pressed="false">Memorias RAM</button>
+        <button class="product-filter cat-tint-almacenamiento" data-category="almacenamiento" aria-pressed="false">Almacenamiento</button>
+        <button class="product-filter cat-tint-placas-madre" data-category="placas-madre" aria-pressed="false">Placas Madre</button>
+        <button class="product-filter cat-tint-refrigeracion" data-category="refrigeracion" aria-pressed="false">Refrigeración</button>
+        <button class="product-filter cat-tint-accesorios" data-category="accesorios" aria-pressed="false">Accesorios</button>
+        <button class="product-filter cat-tint-fuentes" data-category="fuentes" aria-pressed="false">Fuentes de Poder</button>
+        <button class="product-filter cat-tint-monitores" data-category="monitores" aria-pressed="false">Monitores</button>
+      </div>
+
+      <div class="products-grid" id="products-grid" style="margin-top:2.5rem"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Página del comparador -->
+<div class="page" id="page-comparador">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Comparador</div>
+      <h2 class="section-title">Duelo de componentes</h2>
+      <p class="section-sub">Elige una categoría y compara 2 productos cara a cara.</p>
+
+      <div class="duel-category-bar">
+        <button class="duel-cat-btn active" data-category="cpu">Procesadores</button>
+        <button class="duel-cat-btn" data-category="gpu">Tarjetas Gráficas</button>
+        <button class="duel-cat-btn" data-category="ram">Memorias RAM</button>
+        <button class="duel-cat-btn" data-category="almacenamiento">Almacenamiento</button>
+        <button class="duel-cat-btn" data-category="placas-madre">Placas Madre</button>
+        <button class="duel-cat-btn" data-category="refrigeracion">Refrigeración</button>
+        <button class="duel-cat-btn" data-category="accesorios">Accesorios</button>
+        <button class="duel-cat-btn" data-category="fuentes">Fuentes de Poder</button>
+        <button class="duel-cat-btn" data-category="monitores">Monitores</button>
+      </div>
+
+      <div class="duel-select-bar">
+        <div class="duel-select-group duel-a">
+          <span class="duel-select-label" id="duel-label-a">Componente 1</span>
+          <!-- Tarjeta del componente: abre la lista propia de productos (script.js,
+               renderDuelList). El select queda oculto y guarda la elección. -->
+          <button type="button" class="duel-picker" id="duel-picker-a" data-side="a" aria-haspopup="listbox" aria-expanded="false" aria-controls="duel-list-a" aria-labelledby="duel-label-a duel-picker-name-a">
+            <span class="duel-picker-icon" id="duel-picker-icon-a"></span>
+            <span class="duel-picker-text">
+              <span class="duel-picker-name" id="duel-picker-name-a">Selecciona un producto…</span>
+              <span class="duel-picker-meta" id="duel-picker-meta-a"></span>
+            </span>
+            <svg class="duel-picker-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <div class="duel-list" id="duel-list-a" role="listbox" tabindex="-1" aria-labelledby="duel-label-a" hidden></div>
+          <select class="duel-select" id="duel-select-a" tabindex="-1" aria-hidden="true"></select>
+        </div>
+        <!-- VS de los componentes: un chip pequeño conectado a las dos tarjetas -->
+        <div class="duel-vs" aria-hidden="true">
+          <svg class="duel-vs-circuit" width="170" height="64" viewBox="0 0 170 64" focusable="false">
+            <g class="duel-vs-traces" fill="none" stroke-width="2" stroke-linejoin="round"><path d="M0,18 H26 L38,25 H52" stroke="#a855f7"></path><path d="M170,18 H144 L132,25 H118" stroke="#f59e0b"></path><path d="M0,32 H26 L38,32 H52" stroke="#a855f7"></path><path d="M170,32 H144 L132,32 H118" stroke="#f59e0b"></path><path d="M0,46 H26 L38,39 H52" stroke="#a855f7"></path><path d="M170,46 H144 L132,39 H118" stroke="#f59e0b"></path></g>
+            <path d="M66,6V0M66,58V64M79,6V0M79,58V64M92,6V0M92,58V64M105,6V0M105,58V64" stroke="#7c3aed" stroke-width="3"></path>
+          </svg>
+          <div class="duel-vs-chip">VS</div>
+        </div>
+        <div class="duel-select-group duel-b">
+          <span class="duel-select-label" id="duel-label-b">Componente 2</span>
+          <!-- Tarjeta del componente: abre la lista propia de productos (script.js,
+               renderDuelList). El select queda oculto y guarda la elección. -->
+          <button type="button" class="duel-picker" id="duel-picker-b" data-side="b" aria-haspopup="listbox" aria-expanded="false" aria-controls="duel-list-b" aria-labelledby="duel-label-b duel-picker-name-b">
+            <span class="duel-picker-icon" id="duel-picker-icon-b"></span>
+            <span class="duel-picker-text">
+              <span class="duel-picker-name" id="duel-picker-name-b">Selecciona un producto…</span>
+              <span class="duel-picker-meta" id="duel-picker-meta-b"></span>
+            </span>
+            <svg class="duel-picker-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <div class="duel-list" id="duel-list-b" role="listbox" tabindex="-1" aria-labelledby="duel-label-b" hidden></div>
+          <select class="duel-select" id="duel-select-b" tabindex="-1" aria-hidden="true"></select>
+        </div>
+      </div>
+
+      <div class="duel-arena" id="duel-arena">
+        <div class="duel-empty">Selecciona 2 productos para comenzar el duelo ⚔️</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Página de planes de suscripción -->
+<div class="page" id="page-planes">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Planes</div>
+      <h2 class="section-title">Elige el plan que se ajuste a ti</h2>
+      <p class="section-sub">Desbloquea comparaciones ilimitadas y funciones exclusivas de BuildZone.</p>
+
+      <div class="plans-grid" id="plans-grid" style="margin-top:2.5rem">
+        <div class="plans-empty">Cargando planes…</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Página de mi cuenta -->
+<div class="page" id="page-cuenta">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Mi cuenta</div>
+      <h2 class="section-title">Gestiona tu perfil y tu suscripción</h2>
+
+      <div class="account-tabs">
+        <button class="account-tab active" data-tab="perfil">Perfil</button>
+        <button class="account-tab" data-tab="seguridad">Seguridad</button>
+        <button class="account-tab" data-tab="suscripcion">Mi suscripción</button>
+      </div>
+
+      <div class="account-panel active" id="account-panel-perfil">
+        <form class="form-panel" id="perfil-form">
+          <div class="form-group">
+            <label class="form-label">Nombre de usuario</label>
+            <input type="text" class="form-input" id="perfil-username" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-input" id="perfil-nombre" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-input" id="perfil-apellido" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <input type="email" class="form-input" id="perfil-email" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+      </div>
+
+      <div class="account-panel" id="account-panel-seguridad">
+        <form class="form-panel" id="password-form">
+          <div class="form-group">
+            <label class="form-label">Contraseña actual</label>
+            <input type="password" class="form-input" id="password-actual" required minlength="8">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contraseña nueva</label>
+            <input type="password" class="form-input" id="password-nueva" required minlength="8">
+          </div>
+          <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
+        </form>
+      </div>
+
+      <div class="account-panel" id="account-panel-suscripcion">
+        <div id="suscripcion-actual" class="subscription-current">
+          <div class="plans-empty">Cargando tu suscripción…</div>
+        </div>
+        <h3 class="subsection-title">Historial de suscripciones</h3>
+        <div id="suscripcion-historial" class="subscription-history"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Panel de administración -->
+<div class="page" id="page-admin">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Administración</div>
+      <h2 class="section-title">Panel de administrador</h2>
+
+      <div class="account-tabs">
+        <button class="account-tab active" data-admin-tab="usuarios">Usuarios</button>
+        <button class="account-tab" data-admin-tab="planes">Planes</button>
+        <button class="account-tab" data-admin-tab="suscripciones">Suscripciones</button>
+        <button class="account-tab" data-admin-tab="catalogo">Catálogo</button>
+      </div>
+
+      <div class="account-panel active" id="admin-panel-usuarios">
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="admin-usuarios-table">
+            <thead>
+              <tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="account-panel" id="admin-panel-planes">
+        <div style="text-align:right;margin-bottom:1rem">
+          <button class="btn btn-primary" id="btn-nuevo-plan">+ Nuevo plan</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="admin-planes-table">
+            <thead>
+              <tr><th>Nombre</th><th>Precio</th><th>Duración</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="account-panel" id="admin-panel-catalogo">
+        <div class="admin-catalogo-toolbar">
+          <div class="admin-quick-add">
+            <input type="text" class="form-input" id="nueva-marca-nombre" placeholder="Nueva marca" maxlength="100">
+            <button class="btn btn-outline" id="btn-nueva-marca" type="button">+ Marca</button>
+          </div>
+          <div class="admin-quick-add">
+            <input type="text" class="form-input" id="nueva-categoria-nombre" placeholder="Nueva categoría" maxlength="100">
+            <button class="btn btn-outline" id="btn-nueva-categoria" type="button">+ Categoría</button>
+          </div>
+          <button class="btn btn-primary" id="btn-nuevo-producto" type="button">+ Nuevo producto</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="admin-catalogo-table">
+            <thead>
+              <tr><th>Producto</th><th>Marca</th><th>Categoría</th><th>Acciones</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="account-panel" id="admin-panel-suscripciones">
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="admin-suscripciones-table">
+            <thead>
+              <tr><th>Usuario</th><th>Plan</th><th>Inicio</th><th>Fin</th><th>Estado</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal de producto (crear / editar) usado por la pestaña Catálogo -->
+<div class="modal-overlay" id="producto-modal">
+  <div class="modal">
+    <div class="modal-close" data-close-producto-modal="true">✕</div>
+    <div class="modal-header">
+      <div class="modal-icon">⬡</div>
+      <div class="modal-title" id="producto-modal-title">Nuevo producto</div>
+    </div>
+    <form id="producto-form">
+      <input type="hidden" id="producto-id">
+      <div class="form-group">
+        <label class="form-label" for="producto-nombre">Nombre</label>
+        <input type="text" class="form-input" id="producto-nombre" maxlength="150" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="producto-descripcion">Descripción</label>
+        <input type="text" class="form-input" id="producto-descripcion">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="producto-imagen">Imagen (ruta o URL, opcional)</label>
+        <input type="text" class="form-input" id="producto-imagen" maxlength="255">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="producto-marca">Marca</label>
+        <select class="form-input" id="producto-marca" required></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="producto-categoria">Categoría</label>
+        <select class="form-input" id="producto-categoria" required></select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="producto-form-submit">Guardar producto</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de plan (crear / editar) usado por el panel de administración -->
+<div class="modal-overlay" id="plan-modal">
+  <div class="modal">
+    <div class="modal-close" data-close-plan-modal="true">✕</div>
+    <div class="modal-header">
+      <div class="modal-icon">⬡</div>
+      <div class="modal-title" id="plan-modal-title">Nuevo plan</div>
+    </div>
+    <form id="plan-form">
+      <input type="hidden" id="plan-id">
+      <div class="form-group">
+        <label class="form-label">Nombre del plan</label>
+        <input type="text" class="form-input" id="plan-nombre" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción</label>
+        <input type="text" class="form-input" id="plan-descripcion">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Precio (COP)</label>
+        <input type="number" class="form-input" id="plan-precio" min="0" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duración (días)</label>
+        <input type="number" class="form-input" id="plan-duracion" min="1" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="plan-form-submit">Guardar plan</button>
+    </form>
+  </div>
+</div>
+
+<!-- Página de contacto -->
+<div class="page" id="page-contacto">
+  <section class="section section-glow">
+    <div class="section-glow-bg"></div>
+    <div class="section-glow-grid"></div>
+    <div class="section-glow-content">
+      <div class="section-label">Contacto</div>
+      <h2 class="section-title">Hablemos</h2>
+      <p class="section-sub">¿Tienes dudas o sugerencias? Escríbenos y te responderemos pronto.</p>
+
+      <form class="form-panel" id="contacto-form" style="max-width:480px;margin-top:2rem">
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-input" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mensaje</label>
+          <textarea class="form-input" rows="4" placeholder="Cuéntanos en qué podemos ayudarte" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Enviar mensaje</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- Modal de inicio de sesión -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <div class="modal-close" onclick="toggleLogin(false)">✕</div>
+    <div class="modal-header">
+      <div class="modal-icon">⬡</div>
+      <div class="modal-title">Bienvenido de nuevo</div>
+      <div class="modal-sub">Ingresa a tu cuenta de BuildZone</div>
+    </div>
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="login-email" placeholder="tucorreo@ejemplo.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-input" id="login-password" placeholder="Tu contraseña" required minlength="8">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Iniciar sesión</button>
+    </form>
+    <div class="modal-footer">¿No tienes cuenta? <span class="form-link" data-open-register="true">Regístrate</span></div>
+  </div>
+</div>
+
+<!-- Modal de registro -->
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <div class="modal-close" onclick="toggleRegister(false)">✕</div>
+    <div class="modal-header">
+      <div class="modal-icon">⬡</div>
+      <div class="modal-title">Crea tu cuenta</div>
+      <div class="modal-sub">Únete a BuildZone y guarda tus comparaciones</div>
+    </div>
+    <form id="register-form">
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-input" id="register-name" placeholder="Tu nombre" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="register-email" placeholder="tucorreo@ejemplo.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-input" id="register-password" placeholder="Mínimo 8 caracteres" required minlength="8">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmar contraseña</label>
+        <input type="password" class="form-input" id="register-password-confirm" placeholder="Repite tu contraseña" required minlength="8">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Crear cuenta</button>
+    </form>
+    <div class="modal-footer">¿Ya tienes cuenta? <span class="form-link" data-open-login="true">Inicia sesión</span></div>
+  </div>
+</div>
+
+<!-- Ficha técnica de un producto: se abre al tocar una tarjeta en Productos (script.js, openProductDetail) -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal product-modal" id="product-modal-box" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+    <button type="button" class="modal-close" id="product-modal-close" aria-label="Cerrar ficha técnica">✕</button>
+    <div id="product-modal-content"></div>
+  </div>
+</div>
+
+<!-- Modal de artículo del blog -->
+<div class="modal-overlay" id="article-modal">
+  <div class="modal article-modal">
+    <div class="modal-close" onclick="toggleArticle(false)">✕</div>
+    <div class="modal-header">
+      <div class="modal-icon" id="article-icon">🖥️</div>
+      <div class="article-tag" id="article-tag">Guías</div>
+      <div class="modal-title" id="article-title">Título del artículo</div>
+    </div>
+    <div class="article-body" id="article-body"></div>
+  </div>
+</div>
+
+<script src="ui.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="planes.js"></script>
+<script src="cuenta.js"></script>
+<script src="admin.js"></script>
+<script src="catalogo.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
