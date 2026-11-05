@@ -1,0 +1,50 @@
+/* Tema BuildZone para la plantilla "Landing Page" de Start Bootstrap.
+   Toma los colores y tipografías de Style.css del proyecto BuildZone. */
+:root {
+  --bz-fondo: #07070e; --bz-tarjeta: #13131f; --bz-borde: #2a1f4a;
+  --bz-morado: #7c3aed; --bz-morado2: #9333ea; --bz-morado3: #a855f7;
+  --bz-texto: #e2e8f0; --bz-gris: #94a3b8;
+  --bs-primary: #7c3aed; --bs-primary-rgb: 124, 58, 237; --bs-link-color: #a855f7;
+}
+body { background: var(--bz-fondo); color: var(--bz-texto); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; }
+h1, h2, h3, h5, .navbar-brand { font-family: 'Exo 2', sans-serif; font-weight: 800; }
+a { color: var(--bz-morado3); }
+
+/* Barra superior con el logo hexagonal */
+.navbar.bg-light { background: rgba(10,10,15,.92) !important; border-bottom: 1px solid var(--bz-borde); }
+.navbar-brand { display: flex; align-items: center; gap: 10px; color: #fff !important; letter-spacing: 1px; font-weight: 900; }
+.bz-hex { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; color: #fff;
+  background: linear-gradient(135deg, var(--bz-morado), var(--bz-morado2));
+  clip-path: polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); font-size: 15px; }
+.navbar-brand .bz-zone { color: var(--bz-morado3); }
+
+/* Botones */
+.btn-primary { background: linear-gradient(135deg, var(--bz-morado), var(--bz-morado2)); border: 0; font-weight: 700; letter-spacing: .5px;
+  box-shadow: 0 0 18px rgba(124,58,237,.35); }
+.btn-primary:hover, .btn-primary:focus { background: linear-gradient(135deg, var(--bz-morado2), var(--bz-morado3)); }
+
+/* Encabezado: degradado morado con cuadrícula tipo circuito en lugar de la foto del mar */
+header.masthead { background: radial-gradient(circle at 75% 20%, rgba(124,58,237,.45), transparent 55%),
+  linear-gradient(rgba(124,58,237,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,.07) 1px, transparent 1px),
+  var(--bz-fondo); background-size: auto, 40px 40px, 40px 40px, auto; border-bottom: 1px solid var(--bz-borde); }
+header.masthead::before { display: none; }
+.masthead .bz-etiqueta { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: .85rem; color: #c084fc;
+  border: 1px solid var(--bz-borde); border-radius: 30px; padding: 4px 14px; margin-bottom: 1.2rem; background: rgba(124,58,237,.12); }
+.masthead h1 .bz-acento { color: var(--bz-morado3); }
+.masthead .bz-sub { color: var(--bz-gris); font-size: 1.25rem; margin-bottom: 2rem; }
+.form-subscribe .form-control { background: var(--bz-tarjeta); border: 1px solid var(--bz-borde); color: #fff; }
+.form-subscribe .form-control::placeholder { color: var(--bz-gris); }
+
+/* Íconos y secciones */
+.features-icons.bg-light, .bg-light { background: #0b0b14 !important; }
+.features-icons .features-icons-item .features-icons-icon i { text-shadow: 0 0 22px rgba(168,85,247,.55); }
+.features-icons .lead, .showcase .lead { color: var(--bz-gris); }
+.showcase .showcase-text { background: var(--bz-tarjeta); border-top: 1px solid var(--bz-borde); }
+.showcase .showcase-img { background-position: left top !important; min-height: 26rem; border-top: 1px solid var(--bz-borde); }
+.text-primary { color: var(--bz-morado3) !important; }
+
+/* Llamado a la acción y pie */
+section.call-to-action { background: radial-gradient(circle at 20% 80%, rgba(147,51,234,.4), transparent 60%), #0f0f1a; }
+section.call-to-action::before { display: none; }
+.footer { border-top: 1px solid var(--bz-borde); }
+.footer .text-muted { color: var(--bz-gris) !important; }
